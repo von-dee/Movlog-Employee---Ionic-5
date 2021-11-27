@@ -1,0 +1,66 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button [text]="buttonText" [icon]="buttonIcon">
+        </ion-back-button>
+      </ion-buttons>
+      <ion-title>Bids</ion-title>
+      <!-- <ion-buttons slot="end">
+        <ion-button (click)="gotoNotifications()">
+          <ion-icon src="assets/icon/notification.svg"></ion-icon>
+        </ion-button>
+      </ion-buttons> -->
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <div *ngIf="nodata" class="no-record"><span>No Bids(s)</span></div>
+    <div *ngIf="!nodata" class="jobsdone">
+      <h4>Prospects</h4>
+      <div class="joblist" *ngFor="let job of jobs">
+        <ion-item class="collapsible" lines="none" (click)="openDetails(job?.URQ_CODE)">
+          <ion-avatar class="item-avatar" slot="start">
+            <img [src]="jobImageUrl + job?.URQ_REQUESTER_PHOTO" id="jobs" (error)="jobs.src='assets/imgs/default.jpg'"
+              #jobs>
+          </ion-avatar>
+          <span *ngIf="job?.URQ_STATUS =='1'" pending slot="end">
+            <ion-icon src="assets/icon/pending.svg" color="warning"></ion-icon>
+          </span>
+          <span *ngIf="job?.URQ_STATUS =='2'" done slot="end">
+            <ion-icon src="assets/icon/done.svg" color="success"></ion-icon>
+          </span>
+          <ion-label>
+            <h2>{{job?.URQ_SERVNAME}}</h2>
+            <small><b>by:</b> {{job?.URQ_REQUESTER_NAME}}</small>
+            <p id="reqtime">
+              <ion-icon slot="start" src="assets/icon/clock.svg"></ion-icon>
+              {{api.formatDate(job?.URQ_DATE,'d MMM, yyyy | h:mm tt')}}
+            </p>
+          </ion-label>
+        </ion-item>
+        <div class="content" id="content_{{job?.URQ_CODE}}">
+          <div class="divTable" style="width: 100%;">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell"><b>Job Charge:</b></div>
+                <div class="divTableCell">{{job?.URQ_BUDGET}}</div>
+              </div>
+              <div class="divTableRow">
+                <div class="divTableCell"><b>Requirements:</b></div>
+                <div class="divTableCell">{{job?.URQ_JOB_DESCRIPTION}}</div>
+              </div>
+              <div class="divTableRow" *ngIf="job?.URQ_STATUS =='2'">
+                <div class="divTableCell"><b>Location:</b></div>
+                <div class="divTableCell">{{job?.URQ_LOCATION}}</div>
+              </div>
+              <div class="divTableRow" *ngIf="job?.URQ_STATUS =='2'">
+                <div class="divTableCell"><b>Contact:</b></div>
+                <div class="divTableCell">{{job?.URQ_REQUESTER_PHONE}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </ion-content>
